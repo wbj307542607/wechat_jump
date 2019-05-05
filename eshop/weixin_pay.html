@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+    <title>收银台</title>
+    <script src="https://cdn.staticfile.org/jquery/1.11.0/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.2.2/vue.min.js"></script>
+    <style>
+        @media only screen and (min-width: 320px)  and (max-width: 749px) {
+            .tipModule {
+                width: calc(100% - 31px);
+                padding: 0 16px 0 15px;
+                height: 45px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background: linear-gradient(to right, #fc644c, #e53132);
+                margin-bottom: 15px;
+            }
+            .completeBtn {
+                width: calc(100% - 15px);
+                height: 50px;
+                position: fixed;
+                bottom: 0;
+                background: linear-gradient(to right, #ff6446 , #de2f34);
+                font-weight: bold;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .priShow,.tipText {
+                font-size: 13px;
+                color: #fff;
+            }
+            .payName {
+                flex: 1;
+            }
+            .paytype {
+                font-size: 15px;
+            }
+            .payShuom {
+                font-size: 12px;
+                color: #545454;
+            }
+            .paySele {
+                width: calc(100% - 46px);
+                padding: 15px 27px 15px 19px;
+                display: flex;
+                justify-content: space-between;
+                border-bottom: 1px solid #e6e6e6;
+            }
+            .notBorder {
+                border-bottom: none;
+            }
+            .elect {
+                width: 19px;
+                height: 19px;
+                background: linear-gradient(to right, #ff6446 , #de2f34);
+                border-radius: 50%;
+            }
+            .payImg {
+                width: 40px;
+            }
+            .wx {
+                background: url(img/wx.png) no-repeat left center;
+                background-size: 26px 24px;
+            }
+            .notElect {
+                width: 18px;
+                height: 18px;
+                border: 1px solid #4c4c4c;
+                border-radius: 50%;
+            }
+            .favorite {
+                position: absolute;
+                top: calc(50% - 43px);;
+                left: calc(50% - 50px);
+                z-index: 10000;
+                width: 100px;
+                height: 86px;
+                background: rgba(0,0,0,0.9);
+                text-align: center;
+                border-radius: 5px;
+                display: none;
+            }
+            .favorite img {
+                margin: 10px 0 5px;
+                width: 40px;
+                height: 40px;
+                -webkit-animation:circle 4s infinite linear;
+            }
+            .fav {
+                font-size: 12px;
+                color: #fff;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <div class="tipModule">
+        <div class="priShow">{{pay_title}}</div>
+    </div>
+
+    <div class="platform">
+        <div class="payMode">人民币支付￥</div>
+        <div class="paySele" id="zfbPart" style="display: none;">
+            <div class="payImg zfb"></div>
+            <div class="payName">
+                <div class="paytype">支付宝支付</div>
+                <div class="payShuom">支付宝安全支付</div>
+            </div>
+            <div class="notElect electBtn" pay="zfb" id="zfb"></div>
+        </div>
+        <div class="paySele notBorder">
+            <div class="payImg wx"></div>
+            <div class="payName">
+                <div class="paytype">微信支付</div>
+                <div class="payShuom">微信安全支付</div>
+            </div>
+            <div class="notElect elect electBtn" pay="wx" id="wx"></div>
+        </div>
+    </div>
+
+    <div class="platform" id="bankPart" style="display: none;">
+        <div class="payMode">
+            <div>欧元支付€</div>
+        </div>
+        <div class="paySele notBorder">
+            <div class="payImg bank"></div>
+            <div class="payName">
+                <div class="paytype">银行卡支付</div>
+                <div class="payShuom">银行卡完全无忧支付</div>
+            </div>
+            <div class="notElect electBtn" pay="bank" id="bank"></div>
+        </div>
+        <div class="paySele notBorder">
+            <div class="payImg bank"></div>
+            <div class="payName">
+                <div class="paytype">到商家现金支付</div>
+                <div class="payShuom">仅支持马德里和巴塞罗那营业厅</div>
+            </div>
+            <div class="notElect electBtn" pay="cash" id="cash"></div>
+        </div>
+    </div>
+    <div class="error">
+        <div class="err_code"></div>
+        <div class="err_msg"></div>
+        <div class="jsApiParameters"></div>
+    </div>
+
+    <div class="completeBtn" id="payBtn" onclick="callpay();">微信支付{{pay_price}}￥</div>
+</div>
+
+
+<div class="favorite">
+    <img src="img/loading.bak.gif" alt="" />
+    <div class="fav" id="fav1">正在请求支付</div>
+</div>
+
+<div class="favo">
+    <img src="" alt="" />
+    <div class="fav" id="fav2"></div>
+</div>
+
+
+</body>
+
+<script>
+    window.alert = function(name){
+        var iframe = document.createElement("IFRAME");
+        iframe.style.display="none";
+        iframe.setAttribute("src", 'data:text/plain,');
+        document.documentElement.appendChild(iframe);
+        window.frames[0].window.alert(name);
+        iframe.parentNode.removeChild(iframe);
+    }
+    var lastLog;
+    console.oldLog = console.log;
+    console.log = function(str) {
+        console.oldLog(str);
+        lastLog = str;
+    }
+
+
+</script>
+<script>
+    var jsApiParameters,pay='wx';
+
+    var GWC = {
+        version: '1.1.1',
+        urlParams: {},
+
+        getUrlParams: function() {
+            var pairs = location.search.substring(1).split('&');
+            for (var i = 0; i < pairs.length; i++) {
+                var pos = pairs[i].indexOf('=');
+                if (pos === -1) {
+                    continue;
+                }
+                GWC.urlParams[pairs[i].substring(0, pos)] = decodeURIComponent(pairs[i].substring(pos + 1));
+            }
+        },
+        assignParams: function () {
+            var detail = {
+                "pay_title" : GWC.urlParams['pay_title'],
+                "pay_price" : GWC.urlParams['pay_price']
+            };
+
+
+            // $('.jsApiParameters').html(GWC.urlParams['jsonstr']);
+            jsApiParameters = JSON.parse(GWC.urlParams['jsonstr']);
+            var vm = new Vue({
+                el: '#app',
+                data: detail
+            })
+        }
+    };
+
+    GWC.getUrlParams();
+
+    GWC.assignParams();
+
+    function doPay() {
+        if(pay == ''){
+            alert('请选择支付方式');
+        }
+        if(pay == 'wx'){
+            $(".favorite").fadeIn(200);
+            var data = {openid:GWC.urlParams['openid']};
+            $.ajax({
+                url: "http://yy.local.cn/wechat/doPay",
+                type: "POST",
+                dataType: "jsonp", //指定服务器返回的数据类型
+                data:data,
+                success: function (res) {
+                    /*if(res.error == 0){
+                        jsApiParameters = JSON.parse(res.data.json);
+                        callpay();
+                    }else{
+                        alert(res.msg);
+                    }*/
+                    res = JSON.parse(res);
+                    console.log(res);
+                    alert(JSON.stringify(res));
+                }
+            }).error(function (xhr, status, info) {
+                $(".favorite").fadeOut(200);
+                alert(xhr.status + ':' +xhr.statusText);
+                alert(status + ':' + info);
+                alert(lastLog);
+            });;
+            /*$.post('https://eshop.youmobile.es/wechat/doPay',data,function (res) {
+                $(".favorite").fadeOut(200);
+                alert(JSON.stringify(res));
+                console.log(res);
+                if(res.error == 0){
+                    jsApiParameters = JSON.parse(res.data.json);
+                    callpay();
+                }else{
+                    alert(res.msg);
+                }
+            }).error(function (xhr, status, info) {
+                $(".favorite").fadeOut(200);
+                alert(xhr.status + ':' +xhr.statusText);
+                alert(status + ':' + info);
+                alert(lastLog);
+            });*/
+        }else{
+
+        }
+    }
+
+    //调用微信JS api 支付
+    function jsApiCall()
+    {
+        WeixinJSBridge.invoke(
+            'getBrandWCPayRequest',
+            jsApiParameters,
+            function(res){
+
+                WeixinJSBridge.log(res.err_msg);
+
+                if(res.err_msg == 'get_brand_wcpay_request:cancel'){
+                    alert('取消支付');
+                }
+                else if(res.err_msg=='get_brand_wcpay_request:fail'){
+                    alert('支付失败:'+res.err_code +","+ res.err_desc);
+                }
+                else if(res.err_msg=='get_brand_wcpay_request:ok'){
+                    alert('支付成功,请稍后留意充值结果通知');
+                }
+                location.href = "javascript:history.back()";
+            }
+        );
+    }
+    function callpay()
+    {
+        if(pay == ''){
+            alert('请选择支付方式');
+        }
+        if (typeof WeixinJSBridge == "undefined"){
+            if( document.addEventListener ){
+                document.addEventListener('WeixinJSBridgeReady', jsApiCall, false);
+            }else if (document.attachEvent){
+                document.attachEvent('WeixinJSBridgeReady', jsApiCall);
+                document.attachEvent('onWeixinJSBridgeReady', jsApiCall);
+            }
+        }else{
+            jsApiCall();
+        }
+    }
+    $('.electBtn').click(function () {
+        $(this).toggleClass('notElect').toggleClass('elect');
+        if($(this).hasClass('elect')){
+            pay = $(this).attr('pay');
+        }
+    });
+
+</script>
+</html>

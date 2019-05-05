@@ -1,0 +1,196 @@
+    
+        body {
+            width: 100%;
+            background-color: #ffffff;
+            margin: 0px;
+        }
+        .tab-header {
+            width: 100%;
+            height: 150px;
+            background-color: #ffffff;
+            border-bottom: 2px solid #999999;
+            line-height: 150px;
+            text-align: center;
+            font-family: 微软雅黑;
+            font-size: 42px;
+            font-weight: bold;
+            font-stretch: normal;
+            color: #e60012;
+        }
+        .object {
+            position: relative;
+            /*width: 750px;*/
+            height: 100px;
+            background-color: #ffffff;
+            /*display: flex;*/
+            padding-top: 34px;
+            /*padding-left: 50px;*/
+            border-bottom: 20px solid #f8f8f8;
+        }
+        .input-left{
+            position: absolute;
+            left: 20px;
+        }
+        .object label{
+            width: 45px;
+            height: 67px;
+            top: 45px;
+            background: #ffffff url(../img/topup-wx.png) no-repeat center;
+        }
+        input {
+            /*width: 280px;*/
+            height: 80px;
+            width: 100%;
+            font-family: 微软雅黑;
+            font-size: 40px;
+            font-weight: normal;
+            font-stretch: normal;
+            line-height: 65px;
+            letter-spacing: 0px;
+            color: #333333;
+            border: 1px;
+            /*margin-left: 20px;*/
+            text-align: center;
+        }
+        .icon-title {
+            /*width: 750px;*/
+            height: 100px;
+            background-color: #ffffff;
+            display: flex;
+            font-family: 微软雅黑;
+            font-size: 38px;
+            font-weight: normal;
+            font-stretch: normal;
+            line-height: 100px;
+            letter-spacing: 0px;
+            color: #333333;
+            border-bottom: 1px solid #999999;
+        }
+        .icon-title .icon {
+            width: 10px;
+            height: 38px;
+            background-color: #e60012;
+            margin: auto 30px;
+         }
+        .item-list {
+            /*width: 750px;*/
+            /*height: 590px;*/
+            background-color: #ffffff;
+            border-top: #F2F3EF 1px;
+            padding-top: 20px;
+            margin-bottom: 80px;
+        }
+        .item-list .item-inline {
+            height: 200px;
+            width: 95%;
+            background-color: #ffffff;
+            margin: 30px auto;
+        }
+        .item-list .item-inline .item-detail {
+            width: 46.7%;
+            height: 200px;
+            background-color: #ffffff;
+            border-radius: 25px;
+            border: solid 2px #e60012;
+            display: inline-block;
+            margin: auto 1.2%;
+        }
+        .free-append {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            background-color: #e60012;
+            border-radius: 20px 0px 20px 0px;
+            font-family: 微软雅黑;
+            font-size: 35px;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0px;
+            color: #ffffff;
+            text-align: center;
+            line-height: 58px;
+        }
+        .item-list .item-inline .item-detail.selected {
+            /*border: solid 2px #1094FA;*/
+            background-color: #e60012;
+         }
+        .item-list .item-inline .item-detail.selected .price{
+            /*font-size: 70px;*/
+            font-weight: bolder;
+            color: #ffffff;
+        }
+        .item-list .item-inline .item-detail .price {
+            /*width: 69px;*/
+            height: 30%;
+            /*font-family: 微软雅黑;*/
+            font-size: 60px;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0px;
+            color: #e60012;
+            text-align: center;
+            margin-top: 16%;
+        }
+
+        .benefit {
+            height: 40px;
+            font-family: 微软雅黑;
+            font-size: 33px;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0px;
+            color: #e60012;
+            opacity: 0.8;
+            padding-left: 50px;
+        }
+        .footer {
+            height: 500px;
+        }
+        .footer .topup-btn  {
+            width: 100%;
+            height: 150px;
+            background-color: #e60012;
+            /*border-radius: 40px;*/
+            margin: 50px auto 20px auto;
+            line-height: 150px;
+            font-family: 微软雅黑;
+            font-size: 50px;
+            font-weight: bold;
+            font-stretch: normal;
+            letter-spacing:3px;
+            color: #ffffff;
+            text-align: center;
+        }
+        .footer p {
+            /*width: 478px;*/
+            height: 25px;
+            font-family: 微软雅黑;
+            font-size: 30px;
+            font-weight: normal;
+            font-stretch: normal;
+            letter-spacing: 0px;
+            color: #999999;
+            text-align: center;
+        }
+        .favorite {
+            position: absolute;
+            top: calc(50% - 120px);
+            left: calc(50% - 120px);
+            z-index: 10000;
+            width: 230px;
+            height: 200px;
+            background: rgba(0,0,0,0.9);
+            text-align: center;
+            border-radius: 5px;
+            display: none;
+        }
+        .favorite img {
+            margin: 15px 0 10px;
+            width: 80px;
+            height: 80px;
+            -webkit-animation:circle 4s infinite linear;
+        }
+        .fav {
+            font-size: 38px;
+            color: #fff;
+        }

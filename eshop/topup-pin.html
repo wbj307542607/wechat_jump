@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>话费充值</title>
+    <script src="../js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../js/gwc.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/topup-pin.css">
+</head>
+<body style="box-sizing: border-box;">
+
+    <div class="tab-header">
+        刮刮卡充值
+    </div>
+
+    <div class="object">
+        <label class="input-left"></label>
+        <input type="text" id="object" placeholder="请输入手机号" />
+    </div>
+    <div class="pin-recharge recharge-body">
+        <label class="input-left">PIN码</label>
+        <input type="text" id="pin" placeholder="请输入刮刮卡背面12位密码" />
+    </div>
+
+
+    <div class="footer">
+        <div class="topup-btn">立即充值</div>
+        <p>温馨提示：由于网络或其他原因造成的充值延迟请谅解</p><br />
+        <p>如有疑问请联系:友谊通信公众号在线客服</p>
+        <p>免费客服热线 22968</p>
+    </div>
+    <div style="display: none;">
+        <form method="post" action="topUp">
+            <input name="data" id="data"/>
+            <input name="objectId" id="objectId"/>
+            <input name="type" id="type">
+        </form>
+    </div>
+    <div class="favorite">
+        <img src="../img/loading.gif" alt="" />
+        <div class="fav" id="fav1">正在提交</div>
+    </div>
+
+    <div class="error" style="display: block">
+        <div class="err_msg"></div>
+    </div>
+
+</body>
+
+<script>
+    window.alert = function(name){
+        var iframe = document.createElement("IFRAME");
+        iframe.style.display="none";
+        iframe.setAttribute("src", 'data:text/plain,');
+        document.documentElement.appendChild(iframe);
+        window.frames[0].window.alert(name);
+        iframe.parentNode.removeChild(iframe);
+    }
+
+    GWC.getUrlParams();
+
+    $('.topup-btn').click(function () {
+        var $data;
+        var $object = $('#object').val();
+        var reg = /^\d{9}$/;
+        if(!$object.match(reg)){
+            alert('请输入正确的手机号！');
+            return false;
+        }
+        $data = $('#pin').val();
+        if(!$data) {
+            alert('请输入PIN码！');
+            return false;
+        }
+        $(".favorite").show();
+
+        var url = 'https://eshop.youmobile.es/wechat/topUp/doTopUp';
+
+        $.post(url,{objectId:$object,data:$data,type:2,openid:GWC.urlParams['openid']},function (res) {
+            $(".favorite").hide();
+            alert(res.message);
+        }).error(function (xhr, status, info) {
+            $(".favorite").hide();
+            alert(xhr.status + ':' +xhr.statusText);
+        });
+
+        /*$.ajax({
+            url : url,
+            type: "get",
+            data: {objectId:$object,data:$data,type:2},
+            dataType:"jsonp",
+            success : function(res){
+                $(".favorite").hide();
+                alert(res.message);
+            },
+            error : function(xhr){
+                $(".favorite").hide();
+                alert("错误提示： " + xhr.status + " " + xhr.statusText);
+            }
+        });*/
+    });
+
+</script>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+        <title>微信登录</title>
+        <script src="js/jquery-1.11.0.js" type="text/javascript" charset="utf-8"></script>
+        <script src="js/gwc.js" type="text/javascript" charset="utf-8"></script>
+        <style>
+            @media only screen and (min-width: 320px)  and (max-width: 749px) {
+                .favorite {
+                    position: absolute;
+                    top: calc(50% - 43px);;
+                    left: calc(50% - 50px);
+                    z-index: 10000;
+                    width: 110px;
+                    height: 86px;
+                    background: rgba(0, 0, 0, 0.9);
+                    text-align: center;
+                    border-radius: 5px;
+                    display: none;
+                }
+
+                .favorite img {
+                    margin: 10px 0 5px;
+                    width: 40px;
+                    height: 40px;
+                    -webkit-animation: circle 4s infinite linear;
+                }
+
+                .fav {
+                    font-size: 12px;
+                    color: #fff;
+                }
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="favorite">
+            <img src="img/loading.gif" alt="" />
+            <div class="fav" id="fav1">正在登录，请等待...</div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $(".favorite").show();
+            });
+
+            var doRedirect = function() {
+                var code  = GWC.urlParams['code'];
+                var appId = GWC.urlParams['appid'];
+                var scope = GWC.urlParams['scope'] || 'snsapi_base';
+                var state = GWC.urlParams['state'];
+                var redirect_uri = GWC.urlParams['redirect_uri'] || '';
+                var oauth_url = GWC.urlParams['oauth_url'] || '';
+                var redirectUri;
+                var openid= localStorage.openid || '';
+
+                if(openid != '' && redirect_uri != ''){
+                    redirectUri = GWC.appendParams(redirect_uri, {
+                        'openid': openid
+                    });
+                    location.href = redirectUri;
+                }
+
+                if (!code) {
+                    //第一步，没有拿到code，跳转至微信授权页面获取code
+                    redirectUri = GWC.appendParams('https://open.weixin.qq.com/connect/oauth2/authorize#wechat_redirect', {
+                        'appid': appId,
+                        'redirect_uri': encodeURIComponent(location.href),
+                        // 'redirect_uri': encodeURIComponent(GWC.appendParams(location.host+'/get-weixin-code.html',{'callback':GWC.urlParams['redirect_uri']})),
+                        'response_type': 'code',
+                        'scope': scope,
+                        'state': state
+                    });
+                    location.href = redirectUri;
+
+                } else {
+                    //第二步，从微信授权页面跳转回来，已经获取到了code，再次跳转到实际所需页面
+                    console.log(GWC.urlParams);
+                    if(redirect_uri != '' && oauth_url != ''){
+                        // 通过code换取网页授权access_token
+                        var url = GWC.appendParams(oauth_url,{
+                            'code': code,
+                            'state': state
+                        })
+                        console.log(url);
+                        $.get(url,function(res){
+                            console.log(res);
+                            if(res.code == 0){
+                                localStorage.openid = res.openid;
+                                redirectUri = GWC.appendParams(redirect_uri, {
+                                    'openid': openid
+                                });
+                                location.href = redirectUri;
+                                console.log(redirectUri);
+                            }else{
+                                $(".favorite").hide();
+                                alert(res.message);
+                                return false;
+                            }
+                        }).error(function (xhr, status, info) {
+                            $(".favorite").hide();
+                            alert(xhr.status + ':' +xhr.statusText);
+                            return false;
+                        });
+                    }
+                    else{
+                        redirectUri = GWC.appendParams(GWC.urlParams['redirect_uri'], {
+                            'code': code,
+                            'state': state
+                        });
+                        location.href = redirectUri;
+                    }
+                }
+            }
+            GWC.getUrlParams();
+            doRedirect();
+        </script>
+
+    </body>
+
+</html>
+
